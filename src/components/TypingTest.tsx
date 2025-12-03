@@ -6,9 +6,10 @@ import { MdRestartAlt } from 'react-icons/md';
 
 interface TypingTestProps {
     engine: ReturnType<typeof useTypingEngine>;
+    isModalOpen?: boolean;
 }
 
-const TypingTest: React.FC<TypingTestProps> = ({ engine }) => {
+const TypingTest: React.FC<TypingTestProps> = ({ engine, isModalOpen = false }) => {
     const {
         words, cursor, status, reset, handleInput, startTime, endTime,
         mode, config, timeRemaining, setMode, setConfig, wpmHistory
@@ -22,10 +23,10 @@ const TypingTest: React.FC<TypingTestProps> = ({ engine }) => {
     const currentWordRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (status !== 'finished') {
+        if (status !== 'finished' && !isModalOpen) {
             inputRef.current?.focus();
         }
-    }, [status]);
+    }, [status, isModalOpen]);
 
     // Calculate live WPM
     useEffect(() => {
@@ -43,6 +44,8 @@ const TypingTest: React.FC<TypingTestProps> = ({ engine }) => {
     }, [status, startTime, words]);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (isModalOpen) return;
+
         if (e.key === 'Tab') {
             e.preventDefault();
             reset();
@@ -185,7 +188,7 @@ const TypingTest: React.FC<TypingTestProps> = ({ engine }) => {
 
             <div
                 className="typing-test"
-                onClick={() => inputRef.current?.focus()}
+                onClick={() => !isModalOpen && inputRef.current?.focus()}
                 ref={containerRef}
             >
                 <input
@@ -194,7 +197,11 @@ const TypingTest: React.FC<TypingTestProps> = ({ engine }) => {
                     type="text"
                     onKeyDown={handleKeyDown}
                     autoFocus
-                    onBlur={(e) => e.target.focus()}
+                    onBlur={(e) => {
+                        if (!isModalOpen) {
+                            e.target.focus();
+                        }
+                    }}
                 />
 
                 <div className="words-container" style={{ maxHeight: '150px', overflow: 'hidden' }}>

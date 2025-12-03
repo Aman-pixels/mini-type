@@ -37,8 +37,8 @@ function AppContent() {
         setIsShortcutsOpen(true);
       }
 
-      // Ctrl+T for theme cycling
-      if (e.ctrlKey && e.key === 't') {
+      // Ctrl+T for theme cycling (also handle 'T' uppercase)
+      if (e.ctrlKey && (e.key === 't' || e.key === 'T')) {
         e.preventDefault();
         const themeKeys = Object.keys(themes) as Theme[];
         const currentIndex = themeKeys.indexOf(theme);
@@ -61,7 +61,11 @@ function AppContent() {
 
   const handleCustomTextSubmit = (text: string) => {
     engine.setCustomText(text);
-    engine.reset();
+    setIsCustomTextOpen(false);
+    // Use setTimeout to ensure state updates before reset
+    setTimeout(() => {
+      engine.reset();
+    }, 0);
   };
 
   return (
@@ -88,7 +92,10 @@ function AppContent() {
         </div>
       </header>
 
-      <TypingTest engine={engine} />
+      <TypingTest
+        engine={engine}
+        isModalOpen={isSettingsOpen || isAboutOpen || isShortcutsOpen || isCustomTextOpen}
+      />
 
       <Modal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} title="Settings">
         <Settings currentLanguage={engine.language} setLanguage={engine.setLanguage} />
