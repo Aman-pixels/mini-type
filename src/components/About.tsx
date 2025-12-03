@@ -11,7 +11,7 @@ const About: React.FC = () => {
                 <li>Multi-language support</li>
                 <li>Detailed statistics and history</li>
             </ul>
-            <p>Created with React and Vite.</p>
+            <p>Created by Aman </p>
         </div>
     );
 };

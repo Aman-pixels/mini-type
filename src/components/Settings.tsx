@@ -3,6 +3,7 @@ import { useTheme, themes } from '../context/ThemeContext';
 import type { Theme } from '../context/ThemeContext';
 import type { Language } from '../utils/languages';
 import { soundManager } from '../utils/sound';
+import { FiSearch } from 'react-icons/fi';
 
 interface SettingsProps {
     currentLanguage: Language;
@@ -10,20 +11,21 @@ interface SettingsProps {
 }
 
 const themeLabels: Record<Theme, string> = {
-    serika_dark: 'Serika Dark',
-    dracula: 'Dracula',
-    cyberpunk: 'Cyberpunk',
-    light: 'Light',
-    nord: 'Nord',
-    monokai: 'Monokai',
-    gruvbox: 'Gruvbox',
-    solarized_dark: 'Solarized Dark',
-    tokyo_night: 'Tokyo Night'
+    serika_dark: 'serika dark',
+    dracula: 'dracula',
+    cyberpunk: 'cyberpunk',
+    light: 'light',
+    nord: 'nord',
+    monokai: 'monokai',
+    gruvbox: 'gruvbox',
+    solarized_dark: 'solarized dark',
+    tokyo_night: 'tokyo night'
 };
 
 const Settings: React.FC<SettingsProps> = ({ currentLanguage, setLanguage }) => {
     const { theme, setTheme } = useTheme();
     const [soundEnabled, setSoundEnabled] = useState(soundManager.isEnabled());
+    const [searchQuery, setSearchQuery] = useState('');
 
     const toggleSound = () => {
         const newValue = !soundEnabled;
@@ -34,35 +36,63 @@ const Settings: React.FC<SettingsProps> = ({ currentLanguage, setLanguage }) => 
         }
     };
 
+    const filteredThemes = (Object.keys(themes) as Theme[]).filter(t =>
+        themeLabels[t].toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
-        <div className="settings-container">
-            <div className="setting-section">
-                <h3>Theme</h3>
-                <div className="theme-grid">
-                    {(Object.keys(themes) as Theme[]).map((t) => (
+        <div className="settings-container-premium">
+            <div className="setting-section-premium">
+                <h3>theme</h3>
+
+                <div className="theme-search">
+                    <FiSearch className="search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Search themes..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="theme-search-input"
+                    />
+                </div>
+
+                <div className="theme-list">
+                    {filteredThemes.map((t) => (
                         <button
                             key={t}
-                            className={`theme-btn ${theme === t ? 'active' : ''}`}
+                            className={`theme-item ${theme === t ? 'active' : ''}`}
                             onClick={() => setTheme(t)}
-                            style={{
-                                background: themes[t]['--bg-color'],
-                                color: themes[t]['--main-color'],
-                                border: `2px solid ${theme === t ? themes[t]['--main-color'] : themes[t]['--sub-color']}`
-                            }}
                         >
-                            {themeLabels[t]}
+                            <span className="theme-name">{themeLabels[t]}</span>
+                            <div className="theme-colors">
+                                <span
+                                    className="color-dot"
+                                    style={{ backgroundColor: themes[t]['--main-color'] }}
+                                    title="Main color"
+                                />
+                                <span
+                                    className="color-dot"
+                                    style={{ backgroundColor: themes[t]['--sub-color'] }}
+                                    title="Sub color"
+                                />
+                                <span
+                                    className="color-dot"
+                                    style={{ backgroundColor: themes[t]['--text-color'] }}
+                                    title="Text color"
+                                />
+                            </div>
                         </button>
                     ))}
                 </div>
             </div>
 
-            <div className="setting-section">
-                <h3>Language</h3>
-                <div className="language-selector">
+            <div className="setting-section-premium">
+                <h3>language</h3>
+                <div className="language-pills">
                     {(['english', 'spanish', 'french', 'german'] as Language[]).map((lang) => (
                         <button
                             key={lang}
-                            className={`lang-btn ${currentLanguage === lang ? 'active' : ''}`}
+                            className={`language-pill ${currentLanguage === lang ? 'active' : ''}`}
                             onClick={() => setLanguage(lang)}
                         >
                             {lang}
@@ -71,18 +101,18 @@ const Settings: React.FC<SettingsProps> = ({ currentLanguage, setLanguage }) => 
                 </div>
             </div>
 
-            <div className="setting-section">
-                <h3>Sound Effects</h3>
-                <div className="toggle-container">
-                    <label className="toggle-switch">
+            <div className="setting-section-premium">
+                <h3>sound effects</h3>
+                <div className="toggle-row">
+                    <label className="toggle-switch-premium">
                         <input
                             type="checkbox"
                             checked={soundEnabled}
                             onChange={toggleSound}
                         />
-                        <span className="toggle-slider"></span>
+                        <span className="toggle-slider-premium"></span>
                     </label>
-                    <span className="toggle-label">{soundEnabled ? 'Enabled' : 'Disabled'}</span>
+                    <span className="toggle-label-premium">{soundEnabled ? 'enabled' : 'disabled'}</span>
                 </div>
             </div>
         </div>

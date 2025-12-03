@@ -67,9 +67,13 @@ function AppContent() {
   return (
     <div className="app">
       <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div
+          style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', cursor: 'pointer' }}
+          onClick={() => engine.reset()}
+          title="Click to return to main page"
+        >
           <MdKeyboard style={{ fontSize: '2rem', color: 'var(--main-color)' }} />
-          <h1 style={{ color: 'var(--text-color)', fontSize: '1.5rem' }}>mini type</h1>
+          <h1 style={{ color: 'var(--text-color)', fontSize: '1.5rem' }}>Mini Type</h1>
         </div>
         <div style={{ display: 'flex', gap: '1rem' }}>
           <button className="nav-btn" onClick={() => setIsShortcutsOpen(true)} title="Keyboard Shortcuts (Ctrl+K)">

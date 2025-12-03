@@ -173,8 +173,10 @@ const TypingTest: React.FC<TypingTestProps> = ({ engine }) => {
             <div className="live-stats">
                 {mode === 'time' ? (
                     <div className="timer">{timeRemaining}</div>
+                ) : mode === 'zen' ? (
+                    <div className="counter">∞</div>
                 ) : (
-                    <div className="counter">{cursor.wordIndex}/{config}</div>
+                    <div className="counter">{cursor.wordIndex + 1}/{config}</div>
                 )}
                 {showLiveWPM && status === 'running' && (
                     <div className="live-wpm">{liveWPM} wpm</div>

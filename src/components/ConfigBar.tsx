@@ -24,7 +24,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({ mode, config, setMode, setConfig 
     return (
         <div className="config-bar">
             <div className="config-group">
-                {(['time', 'words', 'quote', 'numbers', 'code', 'zen'] as GameMode[]).map(m => (
+                {(['time', 'words', 'quote', 'numbers', 'code', 'zen', 'custom'] as GameMode[]).map(m => (
                     <button
                         key={m}
                         className={`config-btn ${mode === m ? 'active' : ''}`}
